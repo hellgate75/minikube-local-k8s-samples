@@ -39,6 +39,9 @@ if [ "" = "$(echo $STATUS|grep -i nonexistent)" ]; then
 	if [ -e $FOLDER/.profile ]; then
 		rm -f $FOLDER/.profile
 	fi
+	if [ -e $FOLDER/.version ]; then
+		rm -f $FOLDER/.version
+	fi
 	echo "Minikube destroyed ..."
 else
 	echo "Minikube already destroyed ..."

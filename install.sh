@@ -2,6 +2,8 @@
 
 FOLDER="$(realpath "$(dirname "$0")")"
 
+source $FOLDER/env.sh
+
 if [ ! -e $FOLDER/bin ]; then
 	mkdir $FOLDER/bin
 fi

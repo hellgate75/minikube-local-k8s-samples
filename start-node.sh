@@ -11,7 +11,9 @@ fi
 sh $FOLDER/check-profile.sh
 
 PROFILE="$(cat $FOLDER/.profile 2> /dev/null)"
+KUBEVER="$(cat $FOLDER/.version 2> /dev/null)"
 PROFILE_TAG=""
+
 if [ "" != "$PROFILE" ] && [ "minikube" != "$PROFILE" ]; then
 	PROFILE_TAG="-p $PROFILE"
 fi
@@ -45,6 +47,19 @@ if [ "" = "$(echo $STATUS|grep -i running)" ]; then
 		else
 			echo "Using vm driver: <auto-detect>"
 		fi
+		if [ "" == "$KUBEVER" ]; then
+			echo "Please provide kubernetes version :"
+			echo "options: v1.5.0-alpha.0, v1.4.3, v1.4.2, v1.4.1, v1.4.0, v1.3.7, v1.3.6, v1.3.5, v1.3.4, v1.3.3, v1.3.0"
+			echo "( see here for more details: https://minikube.sigs.k8s.io/docs/reference/configuration/kubernetes/)"
+			printf "Choice [default: v1.17.3]: "
+			read VER
+			if [ "" = "$VER" ]; then
+				VER="v1.4.3"
+			fi
+			KUBEVER="$VER"
+			echo "$KUBEVER" > $FOLDER/.version
+		fi
+		OPTION="$OPTION --kubernetes-version=\"$KUBEVER\""
 	fi
 	OPTION="$PROFILE_TAG $OPTION"
 	echo "Starting Minikube ..."

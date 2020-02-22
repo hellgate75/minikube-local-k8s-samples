@@ -1,5 +1,8 @@
 #!/bin/sh
 
+
+FOLDER="$(realpath "$(dirname "$0")")"
+
 if [ "--destroy" = "$1" ]; then
 	if [ -e $FOLDER/.profile ]; then
 		rm -f $FOLDER/.profile
@@ -9,9 +12,6 @@ TRACE="N"
 if [ "--trace" = "$1" ] || [ "--trace" = "$2" ]; then
 	TRACE="Y"
 fi
-
-
-FOLDER="$(realpath "$(dirname "$0")")"
 
 PROFILE="$(cat $FOLDER/.profile 2> /dev/null)"
 CURRENT_PROFILE="$(minikube profile 2> /dev/null|awk 'BEGIN {FS=OFS="* "}{print $NF}')"
