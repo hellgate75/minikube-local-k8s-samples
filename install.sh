@@ -2,7 +2,15 @@
 
 FOLDER="$(realpath "$(dirname "$0")")"
 
-source $FOLDER/env.sh
+function lookupEnv() {
+	if [ -e $FOLDER/.profile ]; then
+	   source $FOLDER/env.sh
+	elif [ -e ./.profile ]; then    
+	   source ./env.sh
+	fi
+}
+
+lookupEnv
 
 if [ ! -e $FOLDER/bin ]; then
 	mkdir $FOLDER/bin

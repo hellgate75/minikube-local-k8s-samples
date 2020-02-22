@@ -52,6 +52,10 @@ You can check minikube profile using followiung script:
 
 * [node-status.sh](/node-status.sh)
 
+You can check create/check help for available elements, with following script:
+
+* [help.sh](/help.sh)
+
 If you in your shell you will run following comamand: 
 
 ``` 

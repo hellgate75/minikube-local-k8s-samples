@@ -2,6 +2,16 @@
 
 FOLDER="$(realpath "$(dirname "$0")")"
 
+function lookupEnv() {
+	if [ -e $FOLDER/.profile ]; then
+	   source $FOLDER/env.sh
+	elif [ -e ./.profile ]; then    
+	   source ./env.sh
+	fi
+}
+
+lookupEnv
+
 sh $FOLDER/install.sh
 RES="$?"
 if [ "0" != "$RES" ]; then
@@ -10,8 +20,8 @@ fi
 
 sh $FOLDER/check-profile.sh
 
-PROFILE="$(cat $FOLDER/.profile 2> /dev/null)"
-KUBEVER="$(cat $FOLDER/.version 2> /dev/null)"
+PROFILE="$(lookupProfile)"
+KUBEVER="$(lookupVersion)"
 PROFILE_TAG=""
 
 if [ "" != "$PROFILE" ] && [ "minikube" != "$PROFILE" ]; then

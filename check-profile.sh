@@ -1,7 +1,14 @@
 #!/bin/sh
 
-
 FOLDER="$(realpath "$(dirname "$0")")"
+
+function lookupEnv() {
+	if [ -e $FOLDER/.profile ]; then
+	   source $FOLDER/env.sh
+	elif [ -e ./.profile ]; then    
+	   source ./env.sh
+	fi
+}
 
 if [ "--destroy" = "$1" ]; then
 	if [ -e $FOLDER/.profile ]; then
@@ -13,7 +20,9 @@ if [ "--trace" = "$1" ] || [ "--trace" = "$2" ]; then
 	TRACE="Y"
 fi
 
-PROFILE="$(cat $FOLDER/.profile 2> /dev/null)"
+lookupEnv
+
+PROFILE="$(lookupProfile)"
 CURRENT_PROFILE="$(minikube profile 2> /dev/null|awk 'BEGIN {FS=OFS="* "}{print $NF}')"
 echo "Active profile: $CURRENT_PROFILE"
 choose="N"

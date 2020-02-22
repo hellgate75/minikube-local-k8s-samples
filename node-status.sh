@@ -2,6 +2,16 @@
 
 FOLDER="$(realpath "$(dirname "$0")")"
 
+function lookupEnv() {
+	if [ -e $FOLDER/.profile ]; then
+	   source $FOLDER/env.sh
+	elif [ -e ./.profile ]; then    
+	   source ./env.sh
+	fi
+}
+
+lookupEnv
+
 sh $FOLDER/install.sh
 RES="$?"
 if [ "0" != "$RES" ]; then
@@ -30,6 +40,6 @@ if [ "" = "$(which minikube)" ]; then
 fi
 echo ""
 echo ""
-echo "Current node/profile status:"
+echo "Current node/profile status (profile: $PROFILE):"
 echo ""
 sh -c "minikube status $PROFILE_TAG"
