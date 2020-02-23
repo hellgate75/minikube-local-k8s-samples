@@ -61,4 +61,3 @@ else
 	echo "Default <minikube> profile has been detected!!"
 fi
 kubectl config use-context $PROFILE
-#http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/

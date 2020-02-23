@@ -52,9 +52,18 @@ You can check minikube profile using followiung script:
 
 * [node-status.sh](/node-status.sh)
 
+
 You can check create/check help for available elements, with following script:
 
 * [help.sh](/help.sh)
+
+
+You can add and remove the Kubernetes dashboard, using following command (use "--delete" to remove the dashboard) :
+
+* [install-show-dashboard.sh](/install-show-dashboard.sh)
+
+(It needs kubectl and at least one profile created, run it in the project folder you created the Kubernetes cluster)
+
 
 In order to set binary installation folder in your shell you can run following comamand: 
 
