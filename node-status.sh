@@ -6,9 +6,9 @@ if [ "/usr/bin" = "$FOLDER" ]; then
 fi
 
 function lookupEnv() {
-	if [ -e $FOLDER/.profile ]; then
+	if [ -e $FOLDER/env.sh ]; then
 	   source $FOLDER/env.sh
-	elif [ -e ./.profile ]; then    
+	elif [ -e ./env.sh ]; then    
 	   source ./env.sh
 	fi
 }
