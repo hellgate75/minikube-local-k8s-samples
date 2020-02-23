@@ -1,6 +1,9 @@
 #!/bin/sh
 
 FOLDER="$(realpath "$(dirname "$0")")"
+if [ "/usr/bin" = "$FOLDER" ]; then
+	FOLDER="$(dirname "$(pwd)")"
+fi
 
 if [ -e $FOLDER/help ]; then
 	rm -Rf $FOLDER/help

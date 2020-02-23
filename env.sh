@@ -1,6 +1,8 @@
 #!/bin/bash
 FOLDER="$(realpath "$(dirname "$0")")"
-
+if [ "/usr/bin" = "$FOLDER" ]; then
+	FOLDER="$(dirname "$(pwd)")"
+fi
 function lookupProfile() {
 	if [ -e $FOLDER/../.profile ]; then
 	   echo "$(cat $FOLDER/../.profile 2> /dev/null)"

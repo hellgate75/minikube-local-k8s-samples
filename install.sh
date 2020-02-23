@@ -1,6 +1,9 @@
 #!/bin/sh
 
 FOLDER="$(realpath "$(dirname "$0")")"
+if [ "/usr/bin" = "$FOLDER" ]; then
+	FOLDER="$(dirname "$(pwd)")"
+fi
 
 function lookupEnv() {
 	if [ -e $FOLDER/.profile ]; then
@@ -38,7 +41,7 @@ if [ "x86_64" != "$MACHINE" ]; then
 	exit 2
 fi
 
-if [ "" = "$(which minikube)" ]; then
+if [ "" = "$(which minikube 2> /dev/null)" ]; then
     echo "Installing mini-kube ..."
 	
 	LATEST="$(curl -sL https://github.com/kubernetes/minikube/releases/latest 2> /dev/null |grep kubernetes|grep minikube|grep releases|grep tag|awk 'BEGIN {FS=OFS=" "}{print $NF}'|tail -1|awk 'BEGIN {FS=OFS="<"}{print $1}'|awk 'BEGIN {FS=OFS=">"}{print $NF}')"
@@ -50,14 +53,14 @@ if [ "" = "$(which minikube)" ]; then
 	fi
 
 	curl -sL https://github.com/kubernetes/minikube/releases/download/$LATEST/minikube-$OS-amd64$EXT -o $FOLDER/bin/minikube$EXT
-	if [ "" == "$(which minikube)" ]; then
+	if [ "" == "$(which minikube 2> /dev/null)" ]; then
 		echo "Error: Unable to install mini-kube!!"
 		exit 3
 	fi
 	echo "Tool mini-kube installed correctly!!"
 fi
 
-if [ "" = "$(which kubectl)" ]; then
+if [ "" = "$(which kubectl 2> /dev/null)" ]; then
 	echo "Install mini-kube ..."
 	LATEST="$(curl -sL https://storage.googleapis.com/kubernetes-release/release/stable.txt)"
 	if [ "" = "$LATEST" ]; then
@@ -66,10 +69,36 @@ if [ "" = "$(which kubectl)" ]; then
 	else
 		echo "Latest verion is : $LATEST"
 	fi
-	curl -sLO https://storage.googleapis.com/kubernetes-release/release/$LATEST/bin/windows/amd64/kubectl$EXT -o $FOLDER/bin/kubectl$EXT
-	if [ "" == "$(which kubectl)" ]; then
+	curl -sLO https://storage.googleapis.com/kubernetes-release/release/$LATEST/bin/$OS/amd64/kubectl$EXT -o $FOLDER/bin/kubectl$EXT
+	if [ "" == "$(which kubectl 2> /dev/null)" ]; then
 		echo "Error: Unable to install kubectl!!"
 		exit 4
 	fi
 	echo "Tool kubectl installed correctly!!"
 fi
+
+if [ "" = "$(which helm 2> /dev/null)" ]; then
+	echo "Install helm ..."
+	LATEST="$(curl -sL https://github.com/helm/helm/releases |grep helm|grep releases|grep tag|grep Helm|head -1|awk 'BEGIN {FS=OFS=" "}{print $NF}'|tail -1|awk 'BEGIN {FS=OFS="<"}{print $1}'|awk 'BEGIN {FS=OFS=">"}{print $NF}')"
+	if [ "" = "$LATEST" ]; then
+		LATEST="v2.16.3"
+		echo "Unable to locate latest version using : $LATEST"
+	else
+		echo "Latest verion is : $LATEST"
+	fi
+	
+	curl -sL curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > $FOLDER/bin/get_helm.sh
+	if [ -e $FOLDER/bin/get_helm.sh ]; then
+		bash -c "export HELM_INSTALL_DIR="$FOLDER/bin"&& alias sudo=\"/bin/sh\" && $FOLDER/bin/get_helm.sh --no-sudo -v $LATEST"
+		rm -f $FOLDER/bin/helm-*.tar.gz
+		rm -f $FOLDER/bin/get_helm.sh
+	fi
+	if [ "" == "$(which helm 2> /dev/null)" ]; then
+		echo "Error: Unable to install helm!!"
+		exit 4
+	fi
+	echo "Tool helm installed correctly!!"
+fi
+
+
+
