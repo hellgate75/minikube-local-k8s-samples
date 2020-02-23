@@ -87,7 +87,7 @@ if [ "" = "$(which helm 2> /dev/null)" ]; then
 		echo "Latest verion is : $LATEST"
 	fi
 	
-	curl -sL curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > $FOLDER/bin/get_helm.sh
+	curl -sL https://raw.githubusercontent.com/helm/helm/master/scripts/get > $FOLDER/bin/get_helm.sh
 	if [ -e $FOLDER/bin/get_helm.sh ]; then
 		bash -c "export HELM_INSTALL_DIR="$FOLDER/bin"&& alias sudo=\"/bin/sh\" && $FOLDER/bin/get_helm.sh --no-sudo -v $LATEST"
 		rm -f $FOLDER/bin/helm-*.tar.gz
@@ -98,6 +98,24 @@ if [ "" = "$(which helm 2> /dev/null)" ]; then
 		exit 4
 	fi
 	echo "Tool helm installed correctly!!"
+fi
+
+if [ "" = "$(which kops 2> /dev/null)" ]; then
+	echo "Install kops ..."
+	LATEST="$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)"
+	if [ "" = "$LATEST" ]; then
+		LATEST="v1.15.2"
+		echo "Unable to locate latest version using : $LATEST"
+	else
+		echo "Latest verion is : $LATEST"
+	fi
+	
+	curl -sL  https://github.com/kubernetes/kops/releases/download/1.15.0/kops-windows-amd64 -o $FOLDER/bin/kops$EXT
+	if [ "" == "$(which kops 2> /dev/null)" ]; then
+		echo "Error: Unable to install kops!!"
+		exit 4
+	fi
+	echo "Tool kops installed correctly!!"
 fi
 
 

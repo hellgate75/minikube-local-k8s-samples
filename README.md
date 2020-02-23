@@ -7,7 +7,7 @@
 
 # Minikube multi-experience Kubernetes environemnt
 
-Sample code for local installing and running a simple Kubernetes experience.
+Sample toolset used for local installation, management and run of a single server Kubernetes cluster experience with easy multiple profiles definition, mainteinance and management
 
 You can eaily define mutiple profiles and multiple instances. Any folder will remember your profiles, drivers, etc...
 
@@ -25,7 +25,7 @@ In this case you have to source the environment before use this product.
 
 In order to activate the experience you need to have installed:
 
-* Virtualbox (or other minikube suitable Virtualizarion framework)
+* Virtualbox (or other minikube suitable Virtualizarion framework, see here: [specifying-the-vm-driver](https://kubernetes.io/docs/setup/learning-environment/minikube/#specifying-the-vm-driver) or here [minikube-drivers](https://minikube.sigs.k8s.io/docs/reference/drivers/) )
 
 * Git bash or Linux environment
 
@@ -56,7 +56,7 @@ You can check create/check help for available elements, with following script:
 
 * [help.sh](/help.sh)
 
-If you in your shell you will run following comamand: 
+In order to set binary installation folder in your shell you can run following comamand: 
 
 ``` 
 	source ./env.sh
@@ -68,6 +68,18 @@ You will have some commands within already reference of some commands (linked to
 
 * kc -> kubectl .....
 
+
+## Available tools
+
+Here list of available tools:
+
+* minikube (used to init/manage Kubernetes cluster)
+
+* kubectl (used to control Kubernetes cluster)
+
+* helm (used to deploy charts)
+
+* kops (used to manage cluster and Kubernetes components)
 
 
 Enjoy the experience.
