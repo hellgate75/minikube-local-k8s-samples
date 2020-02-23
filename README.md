@@ -81,6 +81,8 @@ Here list of available tools:
 
 * kops (used to manage cluster and Kubernetes components)
 
+* kind (creates and manages local Kubernetes clusters using Docker container 'nodes')
+
 
 Enjoy the experience.
 

@@ -110,7 +110,7 @@ if [ "" = "$(which kops 2> /dev/null)" ]; then
 		echo "Latest verion is : $LATEST"
 	fi
 	
-	curl -sL  https://github.com/kubernetes/kops/releases/download/1.15.0/kops-windows-amd64 -o $FOLDER/bin/kops$EXT
+	curl -sL  https://github.com/kubernetes/kops/releases/download/1.15.0/kops-$OS-amd64 -o $FOLDER/bin/kops$EXT
 	if [ "" == "$(which kops 2> /dev/null)" ]; then
 		echo "Error: Unable to install kops!!"
 		exit 4
@@ -118,5 +118,22 @@ if [ "" = "$(which kops 2> /dev/null)" ]; then
 	echo "Tool kops installed correctly!!"
 fi
 
+if [ "" = "$(which kind 2> /dev/null)" ]; then
+	echo "Install kind ..."
+	LATEST="v$(curl -s https://github.com/kubernetes-sigs/kind/releases|grep kind|grep releases|grep tag|grep '/v'|head -1|awk 'BEGIN {FS=OFS=" "}{print $NF}'|tail -1|awk 'BEGIN {FS=OFS="<"}{print $1}'|awk 'BEGIN {FS=OFS=">"}{print $NF}')"
+	if [ "" = "$LATEST" ]; then
+		LATEST="v0.7.0"
+		echo "Unable to locate latest version using : $LATEST"
+	else
+		echo "Latest verion is : $LATEST"
+	fi
+	
+	curl -sL  https://github.com/kubernetes-sigs/kind/releases/download/$LATEST/kind-$OS-amd64 -o $FOLDER/bin/kind$EXT
+	if [ "" == "$(which kind 2> /dev/null)" ]; then
+		echo "Error: Unable to install kind!!"
+		exit 4
+	fi
+	echo "Tool kind installed correctly!!"
+fi
 
 
