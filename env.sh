@@ -47,3 +47,4 @@ alias kc=kubectl
 #if [ -e ~/.kube/completion.bash.inc ]; then
 #	source ~/.kube/completion.bash.inc
 #fi
+kubectl config use-context $PROFILE
