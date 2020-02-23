@@ -11,6 +11,8 @@ Sample toolset used for local installation, management and run of a single serve
 
 You can eaily define mutiple profiles and multiple instances. Any folder will remember your profiles, drivers, etc...
 
+Working folder contains binaries, tools and configuration files used to run the commands and the Kubernetes experience. Using multiple working folders you can maintain multiple peofiles, nodes and Kunernetes clusters.
+
 
 
 ## Goals
