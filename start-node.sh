@@ -6,12 +6,13 @@ if [ "/usr/bin" = "$FOLDER" ]; then
 fi
 
 function lookupEnv() {
-	if [ -e $FOLDER/.profile ]; then
+	if [ -e $FOLDER/env.sh ]; then
 	   source $FOLDER/env.sh
-	elif [ -e ./.profile ]; then    
+	elif [ -e ./env.sh ]; then    
 	   source ./env.sh
 	fi
 }
+
 
 lookupEnv
 
@@ -45,6 +46,7 @@ if [ "" = "$(which minikube)" ]; then
 fi
 
 STATUS="$(minikube status $PROFILE_TAG)"
+VM_DRIVER="virtualbox"
 if [ "" = "$(echo $STATUS|grep -i running)" ]; then
 	OPTION=""
 	if [ "" != "$(echo $STATUS|grep -i nonexistent)" ]; then
@@ -55,6 +57,7 @@ if [ "" = "$(echo $STATUS|grep -i running)" ]; then
 		printf "Choice [default: auto-detect]: "
 		read OPTION
 		if [ "" != "$OPTION" ]; then
+			VM_DRIVER="$OPTION"
 			echo "Using vm driver: $OPTION"
 			OPTION="--vm-driver=$OPTION"
 		else
@@ -62,12 +65,12 @@ if [ "" = "$(echo $STATUS|grep -i running)" ]; then
 		fi
 		if [ "" == "$KUBEVER" ]; then
 			echo "Please provide kubernetes version :"
-			echo "options: v1.5.0-alpha.0, v1.4.3, v1.4.2, v1.4.1, v1.4.0, v1.3.7, v1.3.6, v1.3.5, v1.3.4, v1.3.3, v1.3.0"
+			echo "options: $(curl -sL https://github.com/kubernetes/kubernetes/releases |grep releases|grep tag|grep '/kubernetes/kubernetes/'|awk 'BEGIN {FS=OFS="/tag/"}{print $NF}'|awk 'BEGIN {FS=OFS="\""}{print $1}'|xargs echo) ..."
 			echo "( see here for more details: https://minikube.sigs.k8s.io/docs/reference/configuration/kubernetes/)"
-			printf "Choice [default: v1.17.3]: "
+			printf "Choice [default: v1.17.0]: "
 			read VER
 			if [ "" = "$VER" ]; then
-				VER="v1.4.3"
+				VER="v1.17.0"
 			fi
 			KUBEVER="$VER"
 			echo "$KUBEVER" > $FOLDER/.version
@@ -78,6 +81,11 @@ if [ "" = "$(echo $STATUS|grep -i running)" ]; then
 	echo "Starting Minikube ..."
 	echo "Running: <minikube start $OPTION>"
 	sh -c "minikube start $OPTION"
+	if [ "" != "$PROFILE" ]; then
+		sh -c "kubectl config use-context $PROFILE"
+	fi
+	sh -c "cat $FOLDER/files/install-x.sh | minikube $PROFILE_TAG ssh"  2>&1 1> /dev/null
+	sh -c "minikube $PROFILE_TAG config set vm-driver $VM_DRIVER"
 	echo "Minikube started ..."
 else
 	echo "Minikube already running ..."

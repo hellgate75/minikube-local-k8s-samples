@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flow-centric-service
+  labels:
+    type: service
+    app: flow-centric
+    role: services
+spec:
+  ports:
+  - name: config-server-port
+    port: 8888
+    protocol: TCP
+    targetPort: 28888
+  - name: h2-database-admin-port
+    port: 9090
+    protocol: TCP
+    targetPort: 29090
+  - name: rabbitmq-admin-port
+    port: 15672
+    protocol: TCP
+    targetPort: 25672
+  - name: mongo-admin-port
+    port: 27017
+    protocol: TCP
+    targetPort: 37017
+  selector:
+    type: pod
+    app: flow-centric
+    role: services
+status: 
+  loadBalancer: {}

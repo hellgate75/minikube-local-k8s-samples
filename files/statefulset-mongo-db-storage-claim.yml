@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-config-storage-claim
+  labels:
+    volume: mongodb-config-storage-volume
+    type: storage-claim
+    role: services
+    app: flow-centric
+spec:
+  accessModes:
+  - ReadWriteMany
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      volume: mongodb-config-storage

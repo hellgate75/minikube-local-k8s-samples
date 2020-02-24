@@ -5,7 +5,7 @@
 </p><br/>
 <br/>
 
-# Minikube multi-experience Kubernetes environemnt
+# Minikube multi-experience Kubernetes environemnt : Flow-Centric Experience
 
 Sample toolset used for local installation, management and run of a single server Kubernetes cluster experience with easy multiple profiles definition, mainteinance and management
 
@@ -78,6 +78,16 @@ You will have some commands within already reference of some commands (linked to
 * mk -> minikube -p <profile> .....
 
 * kc -> kubectl .....
+
+
+
+## Install Flow-Centric
+
+In order to install flow-centric environment, please run following script file (after your virtual machine is ready and you have required the environment in the shell):
+
+* [install-flow-centric-packages.sh](/install-flow-centric-packages.sh)
+
+
 
 
 ## Available tools

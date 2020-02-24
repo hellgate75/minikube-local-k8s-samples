@@ -1,0 +1,172 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: flow-centric-pod
+  labels:
+    type: pod
+    app: flow-centric
+    role: services
+spec:
+  containers:
+    - name: mongodb
+      image: mongo:3.4.1
+      env:
+      - name: HOSTNAME
+        value: "mongodb.flowcentric"
+      ports:
+      - containerPort: 27017
+        name: peer
+      securityContext:
+        capabilities:
+          add: 
+          - ALL
+      tty: true
+      livenessProbe:
+        exec:
+          command: 
+           - bash
+           - -c 
+           - "if mongo --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'; then exit 0; fi; exit 1;"
+        initialDelaySeconds: 45
+        periodSeconds: 120
+        timeoutSeconds: 20
+      readinessProbe:
+        exec:
+          command: 
+           - bash
+           - -c 
+           - "if mongo --eval 'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'; then exit 0; fi; exit 1;"
+        initialDelaySeconds: 45
+        periodSeconds: 120
+        timeoutSeconds: 20
+      volumeMounts:
+      - name: mongodb-data
+        mountPath: /data/db
+      - name: mongodb-config
+        mountPath: /data/configdb
+    - name: rabbitmq
+      image: hellgate75/rabbitmq:3.8-rc-management-flow-centric
+      env:
+      - name: HOSTNAME
+        value: "rabbitmq.flowcentric"
+      ports:
+      - containerPort: 4369
+        name: port-1
+      - containerPort: 5671
+        name: port-2
+      - containerPort: 25672
+        name: port-3
+      - containerPort: 15672
+        name: port-4
+      - containerPort: 5672
+        name: port-5
+      securityContext:
+        capabilities:
+          add: 
+          - ALL
+      tty: true
+      volumeMounts:
+      - name: rabbitmq
+        mountPath: /var/lib/rabbitmq
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 15672
+        initialDelaySeconds: 45
+        periodSeconds: 120
+        timeoutSeconds: 20
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 15672
+        initialDelaySeconds: 45
+        periodSeconds: 120
+        timeoutSeconds: 20
+    - name: h2-database
+      image: hellgate75/h2-database:2019.10.14
+      env:
+      - name: HOSTNAME
+        value: "h2.flowcentric"
+      - name: H2_ENABLE_WEB
+        value: "true"
+      - name: H2_ENABLE_INSECURE
+        value: "true"
+      - name: H2_ENABLE_SECURE
+        value: "false"
+      - name: H2_DATA_GIT_URL
+        value: "git@github.com:hellgate75/dataflow-flow-centric-config.git|/data"
+      ports:
+      - containerPort: 9090
+        name: port-1
+      - containerPort: 65123
+        name: port-2
+      securityContext:
+        capabilities:
+          add: 
+          - ALL
+      tty: true
+      volumeMounts:
+      - name: h2-database-data
+        mountPath: /var/h2-database/data
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 9090
+        initialDelaySeconds: 30
+        periodSeconds: 120
+        timeoutSeconds: 20
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 9090
+        initialDelaySeconds: 30
+        periodSeconds: 120
+        timeoutSeconds: 20
+    - name: config-server
+      image: hellgate75/spring-cloud-config-server:1.0.0-flow-centric
+      env:
+      - name: HOSTNAME
+        value: "configserver.flowcentric"
+      - name: SHUTDOWN_ON_JVM_EXIT
+        value: "true"
+      ports:
+      - containerPort: 8888
+        name: port-1
+      securityContext:
+        capabilities:
+          add: 
+          - ALL
+      tty: true
+      volumeMounts:
+      - name: microservices-data
+        mountPath: /opt/dataflow-flow-centric/log
+      livenessProbe:
+        httpGet:
+          path: /dataflow-ms-flow-centric-source-poc/source-compose
+          port: 8888
+        initialDelaySeconds: 30
+        periodSeconds: 120
+        timeoutSeconds: 20
+      readinessProbe:
+        httpGet:
+          path: /dataflow-ms-flow-centric-source-poc/source-compose
+          port: 8888
+        initialDelaySeconds: 30
+        periodSeconds: 120
+        timeoutSeconds: 20
+  volumes:
+    - name: rabbitmq
+      persistentVolumeClaim:
+        claimName: rabbitmq-storage-claim
+    - name: mongodb-config
+      persistentVolumeClaim:
+        claimName: mongodb-config-storage-claim
+    - name: mongodb-data
+      persistentVolumeClaim:
+        claimName: mongodb-database-storage-claim
+    - name: h2-database-data
+      persistentVolumeClaim:
+        claimName: h2-database-storage-claim
+    - name: microservices-data
+      persistentVolumeClaim:
+        claimName: microservices-storage-claim
