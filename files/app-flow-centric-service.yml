@@ -12,22 +12,22 @@ spec:
     port: 8888
     protocol: TCP
     targetPort: 8888
-    nodePort: 28888
+    #nodePort: 28888
   - name: h2-database-admin-port
     port: 9090
     protocol: TCP
     targetPort: 9090
-    nodePort: 29090
+    #nodePort: 29090
   - name: rabbitmq-admin-port
     port: 15672
     protocol: TCP
     targetPort: 15672
-    nodePort: 25672
+    #nodePort: 25672
   - name: mongo-admin-port
     port: 27017
     protocol: TCP
     targetPort: 27017
-    nodePort: 37017
+    #nodePort: 37017
   selector:
     type: pod
     app: flow-centric
