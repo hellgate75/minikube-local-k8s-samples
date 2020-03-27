@@ -7,6 +7,8 @@ metadata:
     app: flow-centric
     role: services
 spec:
+  hostname: flow-centric-service
+  subdomain: flowcentric
   containers:
     - name: mongodb
       image: mongo:3.4.1
